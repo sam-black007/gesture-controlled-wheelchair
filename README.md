@@ -126,6 +126,14 @@ that auto-refreshes every 500 ms:
 
 ---
 
+## Hardware Gallery
+
+![Hardware build 1](docs/media/hardware/hardware-1.jpeg)
+
+![Hardware build 2](docs/media/hardware/hardware-2.jpeg)
+
+---
+
 ## Getting Started
 
 1. **Install** the [Arduino IDE](https://www.arduino.cc/en/software) and the
@@ -174,9 +182,12 @@ ESP-NOW init status.
 │   └── Gesture_Transmitter/
 │       └── Gesture_Transmitter.ino          # MPU6050 tilt sensing, ESP-NOW TX
 ├── docs/
-│   ├── media/                    # Screenshots & demo video (rendered by the README)
-│   │   ├── dashboard.png
-│   │   └── demo.mp4
+│   ├── media/                    # Images & demo video (rendered by the README)
+│   │   ├── dashboard.png         # Web dashboard screenshot
+│   │   ├── hardware/
+│   │   │   ├── hardware-1.jpeg   # Hardware build photo
+│   │   │   └── hardware-2.jpeg   # Hardware build photo
+│   │   └── demo.mp4              # Working demo video
 │   └── README.md                 # Docs & media notes
 ├── .gitignore                    # Arduino / IDE build artifacts
 ├── README.md                     # This file
