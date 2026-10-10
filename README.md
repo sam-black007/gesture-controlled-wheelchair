@@ -62,6 +62,29 @@ dashboard as JSON over HTTP.
 
 ---
 
+## Dashboard Preview
+
+The control console is hosted right on the receiver at **http://192.168.4.1**
+(join the `ESP32_Rover` access point). It's a responsive, dark-mode dashboard
+that auto-refreshes every 500 ms:
+
+![Dashboard preview](docs/dashboard.png)
+
+| Panel | What it shows |
+|-------|---------------|
+| **01 · Control mode** | Switch between Gesture (max 80 %) and Web (max 100 %) |
+| **02 · Manual drive** | Direction D-pad + web speed slider (hold to move, release to stop) |
+| **03 · Gesture & IMU** | Tilt-threshold slider, live pitch / roll / gesture readouts, live tilt dot |
+| **04 · System diagnostics** | Mode, movement, PWM %, gesture link, Wi-Fi RSSI, uptime, packet age, emergency-stop state, packet counters, last stop reason, motor ramp |
+| **05 · Advanced connection diagnostics** | ESP-NOW channel, last packet sequence, missing (gapped) packets, live packet rate (~20 Hz), gesture-link RX signal (RSSI) |
+
+> The **Advanced connection diagnostics** panel tracks the gesture link health:
+> sequence numbers reveal lost packets, the rate chart confirms the transmitter
+> is streaming (~20 Hz), and the RSSI value shows radio signal strength directly
+> from received ESP-NOW packets.
+
+---
+
 ## Hardware Required
 
 | Component            | Qty | Notes                                  |
@@ -145,10 +168,15 @@ ESP-NOW init status.
 
 ```
 .
-├── Rover_Receiver_Web_Gesture.ino   # Motor driver, AP + dashboard, ESP-NOW RX, ramp + kick logic
-├── Gesture_Transmitter.ino          # MPU6050 tilt sensing, ESP-NOW TX, settings RX
-├── README.md                        # This file
-└── LICENSE                          # MIT
+├── Rover_Receiver_Web_Gesture/   # Receiver sketch (Arduino project folder)
+│   └── Rover_Receiver_Web_Gesture.ino
+├── Gesture_Transmitter/          # Transmitter sketch (Arduino project folder)
+│   └── Gesture_Transmitter.ino
+├── docs/
+│   ├── dashboard.png             # Dashboard preview screenshot
+│   └── demo.mp4                  # Working demo video
+├── README.md                     # This file
+└── LICENSE                       # MIT
 ```
 
 ### Key firmware behavior
@@ -190,6 +218,16 @@ this prototype.**
 - [ ] Joystick input option for users who cannot tilt reliably
 - [ ] 3 × AA / LiPo voltage monitoring with low-battery warning
 - [ ] Spoken feedback when switching modes
+
+---
+
+## Working Demo
+
+Here's the prototype in action (gesture driving + live dashboard):
+
+<video src="docs/demo.mp4" controls="true" width="100%"></video>
+
+> Drop your demo clip at `docs/demo.mp4` and GitHub renders it inline on this page.
 
 ---
 

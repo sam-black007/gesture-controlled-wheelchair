@@ -66,6 +66,16 @@ volatile uint32_t receivedPackets = 0;
 volatile uint32_t invalidPackets = 0;
 String lastStopReason = "Startup";
 
+// Advanced connection diagnostics state
+constexpr uint8_t RX_TIME_RING = 16;
+volatile uint32_t rxTimeRing[RX_TIME_RING];
+volatile uint8_t rxTimeIdx = 0;
+volatile float rxRateHz = 0;
+volatile uint32_t lastPacketCounter = 0;
+volatile bool haveLastCounter = false;
+volatile uint32_t gapPackets = 0;
+volatile int8_t lastRxRssi = 0;
+
 // Ramped PWM state. Safety stops (emergency stop / gesture timeout) remain immediate.
 uint8_t currentDuty = 0;
 uint8_t targetDuty = 0;
@@ -240,6 +250,25 @@ void onDataRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
   lastGesturePacketMs = millis();
   packetReady = true;
   receivedPackets++;
+
+  // Sequence gap tracking (detects lost packets between 50 ms sends).
+  if (haveLastCounter && p.counter > lastPacketCounter) {
+    uint32_t delta = p.counter - lastPacketCounter;
+    if (delta > 1) gapPackets += delta - 1;
+  }
+  haveLastCounter = true;
+  lastPacketCounter = p.counter;
+
+  // Rolling packet-rate estimate from a ring of arrival timestamps.
+  rxTimeRing[rxTimeIdx] = millis();
+  rxTimeIdx = (uint8_t)((rxTimeIdx + 1) % RX_TIME_RING);
+  uint32_t newest = rxTimeRing[(rxTimeIdx + RX_TIME_RING - 1) % RX_TIME_RING];
+  uint32_t oldest = rxTimeRing[rxTimeIdx];
+  uint32_t span = newest - oldest;
+  if (span >= 25 && span <= 2000) rxRateHz = (RX_TIME_RING - 1) * 1000.0f / (float)span;
+
+  // Signal strength of the incoming ESP-NOW packet.
+  if (info->rx_ctrl) lastRxRssi = info->rx_ctrl->rssi;
   portEXIT_CRITICAL(&packetMux);
 }
 
@@ -293,7 +322,15 @@ label{display:block;margin:14px 0 8px;color:#c8d4e7;font-size:13px}label b{color
 <div class="stat"><div class="muted">Last stop reason</div><div class="value" id="stopReason">Startup</div></div>
 <div class="stat"><div class="muted">Motor ramp</div><div class="value" id="ramp">Ready</div></div></div>
 <p class="muted">RSSI may show N/A because the receiver is operating as an access point and is not connected to an external Wi-Fi network. Packet counters reset when the receiver reboots.</p>
-<button class="stop" onclick="estop(true)">EMERGENCY STOP</button> <button onclick="estop(false)">Re-enable motors</button></div><div class="footer">ROVER CONTROL SYSTEM · Gesture mode is firmware-limited to 80% PWM. Web mode supports up to 100%. Test with drive wheels lifted before floor operation.</div></div>
+<button class="stop" onclick="estop(true)">EMERGENCY STOP</button> <button onclick="estop(false)">Re-enable motors</button></div>
+<div class="panel span12"><div class="sectionhead"><div class="sectionicon">05</div><h2>Advanced connection diagnostics</h2></div><div class="diagnostics">
+<div class="stat"><div class="muted">ESP-NOW channel</div><div class="value">1</div></div>
+<div class="stat"><div class="muted">Last packet seq</div><div class="value" id="lastSeq">—</div></div>
+<div class="stat"><div class="muted">Missing packets</div><div class="value" id="gaps">0</div></div>
+<div class="stat"><div class="muted">Live packet rate</div><div class="value" id="rate">—</div></div>
+<div class="stat"><div class="muted">RX signal (RSSI)</div><div class="value" id="rxrssi">—</div></div>
+<div class="stat"><div class="muted">Gesture link</div><div class="value" id="link2">—</div></div></div>
+<p class="muted">Measured from incoming ESP-NOW packets. Missing packets counts sequence gaps; the live rate should be ~20 Hz while the transmitter is active. RX RSSI reflects the gesture-link radio signal, not the dashboard Wi-Fi.</p></div><div class="footer">ROVER CONTROL SYSTEM · Gesture mode is firmware-limited to 80% PWM. Web mode supports up to 100%. Test with drive wheels lifted before floor operation.</div></div>
 </main><script>
 let mode='gesture', moveTimer=null, moving=false;
 async function req(path){try{let r=await fetch(path,{cache:'no-store'});return await r.json()}catch(e){return null}}
@@ -315,6 +352,8 @@ val('pwm',s.pwm+' / 255 ('+s.percent+'%)');val('link',s.link?'CONNECTED':'DISCON
 val('rssi',s.rssi===999?'N/A':s.rssi+' dBm');val('uptime',s.uptime);val('age',s.packetAge<0?'No packets':s.packetAge+' ms');
 val('estop',s.estop?'ACTIVE':'Inactive',s.estop?'bad':'good');
 val('packets',String(s.packets));val('invalid',String(s.invalidPackets));val('stopReason',s.stopReason);val('ramp',s.ramp+'%');
+val('lastSeq',s.haveSeq?String(s.lastSeq):'—');val('gaps',String(s.gaps),s.gaps===0?'good':'bad');
+val('rate',s.rate>0?s.rate.toFixed(1)+' Hz':'—');val('rxrssi',s.rxRssi? s.rxRssi+' dBm':'—');val('link2',s.link?'CONNECTED':'DISCONNECTED',s.link?'good':'bad');
 let dx=Math.max(-48,Math.min(48,s.roll*1.6)),dy=Math.max(-38,Math.min(38,s.pitch*1.2));
 document.getElementById('tiltDot').setAttribute('cx',150+dx);document.getElementById('tiltDot').setAttribute('cy',75+dy)}
 setInterval(refresh,500);refresh();
@@ -384,8 +423,13 @@ String uptimeText(uint32_t ms) {
 void handleStatus() {
   RoverPacket p;
   uint32_t packetMs;
+  float rateHz;
+  uint32_t lpc, gaps;
+  int8_t rxRssi;
+  bool haveSeq;
   portENTER_CRITICAL(&packetMux);
   p=latestPacket; packetMs=lastGesturePacketMs;
+  rateHz=rxRateHz; lpc=lastPacketCounter; gaps=gapPackets; rxRssi=lastRxRssi; haveSeq=haveLastCounter;
   portEXIT_CRITICAL(&packetMux);
   bool link = packetMs != 0 && millis()-packetMs < 1500;
   int age = packetMs == 0 ? -1 : (int)(millis()-packetMs);
@@ -406,7 +450,12 @@ void handleStatus() {
   j += "\"packets\":"+String((uint32_t)receivedPackets)+",";
   j += "\"invalidPackets\":"+String((uint32_t)invalidPackets)+",";
   j += "\"stopReason\":\""+lastStopReason+"\",";
-  j += "\"ramp\":"+String((uint16_t)currentDuty*100/255)+"}";
+  j += "\"ramp\":"+String((uint16_t)currentDuty*100/255)+",";
+  j += "\"lastSeq\":"+String(lpc)+",";
+  j += "\"haveSeq\":"+String(haveSeq?"true":"false")+",";
+  j += "\"gaps\":"+String((uint32_t)gaps)+",";
+  j += "\"rate\":"+String(rateHz,1)+",";
+  j += "\"rxRssi\":"+String(rxRssi)+"}";
   server.send(200,"application/json",j);
 }
 

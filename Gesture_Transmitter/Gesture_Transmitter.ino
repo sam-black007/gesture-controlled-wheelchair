@@ -1,14 +1,3 @@
-/*
-  Gesture_Transmitter.ino
-  Board: ESP32 DevKit V1 / ESP32-WROOM-32 + MPU6050/GY-521
-
-  MPU6050 wiring:
-    VCC -> 3V3, GND -> GND, SDA -> GPIO21, SCL -> GPIO22
-  Sends gesture, pitch, roll and speed (maximum 80%) to receiver via ESP-NOW.
-  Receives sensitivity settings from the receiver dashboard.
-  Direct-register reads are used because the MPU6050 library begin() failed
-  on the user's module while I2C address 0x68 responded.
-*/
 
 #include <WiFi.h>
 #include <Wire.h>
