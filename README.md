@@ -68,7 +68,7 @@ The control console is hosted right on the receiver at **http://192.168.4.1**
 (join the `ESP32_Rover` access point). It's a responsive, dark-mode dashboard
 that auto-refreshes every 500 ms:
 
-![Dashboard preview](docs/dashboard.png)
+![Dashboard preview](docs/media/dashboard.png)
 
 | Panel | What it shows |
 |-------|---------------|
@@ -130,10 +130,10 @@ that auto-refreshes every 500 ms:
 
 1. **Install** the [Arduino IDE](https://www.arduino.cc/en/software) and the
    [Arduino-ESP32 core (v3.x)](https://github.com/espressif/arduino-esp32).
-2. **Flash the receiver** — open `Rover_Receiver_Web_Gesture.ino` → select
-   *ESP32 Dev Module* → upload.
-3. **Flash the transmitter** — open `Gesture_Transmitter.ino` → upload to the
-   second ESP32. Keep it still and level during the ~2 s calibration.
+2. **Flash the receiver** — open `firmware/Rover_Receiver_Web_Gesture/Rover_Receiver_Web_Gesture.ino`
+   → select *ESP32 Dev Module* → upload.
+3. **Flash the transmitter** — open `firmware/Gesture_Transmitter/Gesture_Transmitter.ino`
+   → upload to the second ESP32. Keep it still and level during the ~2 s calibration.
 4. **Power on** and join the receiver's Wi-Fi network:
    - **SSID:** `ESP32_Rover` · **Password:** `rover123`
    - **Dashboard:** http://192.168.4.1
@@ -168,13 +168,17 @@ ESP-NOW init status.
 
 ```
 .
-├── Rover_Receiver_Web_Gesture/   # Receiver sketch (Arduino project folder)
-│   └── Rover_Receiver_Web_Gesture.ino
-├── Gesture_Transmitter/          # Transmitter sketch (Arduino project folder)
-│   └── Gesture_Transmitter.ino
+├── firmware/                     # All ESP32 sketches (each in its own Arduino folder)
+│   ├── Rover_Receiver_Web_Gesture/
+│   │   └── Rover_Receiver_Web_Gesture.ino   # Motor driver, AP + dashboard, ESP-NOW RX
+│   └── Gesture_Transmitter/
+│       └── Gesture_Transmitter.ino          # MPU6050 tilt sensing, ESP-NOW TX
 ├── docs/
-│   ├── dashboard.png             # Dashboard preview screenshot
-│   └── demo.mp4                  # Working demo video
+│   ├── media/                    # Screenshots & demo video (rendered by the README)
+│   │   ├── dashboard.png
+│   │   └── demo.mp4
+│   └── README.md                 # Docs & media notes
+├── .gitignore                    # Arduino / IDE build artifacts
 ├── README.md                     # This file
 └── LICENSE                       # MIT
 ```
@@ -225,9 +229,9 @@ this prototype.**
 
 Here's the prototype in action (gesture driving + live dashboard):
 
-<video src="docs/demo.mp4" controls="true" width="100%"></video>
+<video src="docs/media/demo.mp4" controls="true" width="100%"></video>
 
-> Drop your demo clip at `docs/demo.mp4` and GitHub renders it inline on this page.
+> Drop your demo clip at `docs/media/demo.mp4` and GitHub renders it inline on this page.
 
 ---
 
