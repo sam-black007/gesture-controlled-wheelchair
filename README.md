@@ -26,7 +26,8 @@ Built as a low-cost proof of concept for hands-free mobility assistance.
 - **Smooth motor ramping** — PWM is ramped in 8/255 steps every 10 ms instead of slamming full power.
 - **Momentum kick** — a one-shot 95 % PWM for 300 ms after a full stop to overcome initial inertia on motors/gearboxes, then it settles to your requested speed. The kick is **not** retriggered by repeated packets.
 - **Safety built-in** —
-  - Emergency stop button (instant cut)
+  - **Mechanical emergency-stop switch** wired in series with the battery supply — physically cuts power, works even if firmware fails
+  - Emergency stop button in the dashboard (instant cut)
   - Gesture link timeout (500 ms) and web link timeout (700 ms) auto-stop
   - Direction changes always ramps down to zero before switching the H-bridge
   - Gesture speed firmware-capped at 80 %
@@ -114,6 +115,20 @@ that auto-refreshes every 500 ms:
 
 > Remove the L298N **ENA and ENB jumper caps** — the ESP32 provides PWM.
 > Keep signal wires short; power the L298N from the battery, not the ESP32 5 V rail.
+
+### Mechanical emergency stop
+
+A push-button (normally-closed) emergency stop is wired **in series with the
+battery supply**, before it reaches the load:
+
+```
+Battery (+) ←→ E-STOP switch ←→ motor supply (+)
+Battery (-) ──────────────────→ motor supply (−)
+```
+
+Pressing the switch physically **removes power from the circuit** — a true
+hardware fail-safe that works even if the firmware, Wi-Fi dashboard, or the
+ESP-NOW link has failed.
 
 ### Transmitter board (ESP32 → MPU6050)
 
@@ -217,7 +232,8 @@ considerations apply before any human use:
   L298N has a significant voltage drop — size your supply accordingly.
 - Do not use the momentum kick to force a jammed motor.
 - Phone/chest/torso-mount ergonomics and emergency cut-off positioning should be
-  tested thoroughly. Always keep the dashboard Emergency Stop reachable.
+  tested thoroughly. Keep both the **mechanical E-stop switch** and the dashboard
+  **Emergency Stop** button within easy reach.
 - ESP-NOW broadcast is **unauthenticated**; anyone on the Wi-Fi channel can send
   packets. For a real deployment, add crypto/authenticated pairing.
 
@@ -228,7 +244,6 @@ this prototype.**
 
 ## Roadmap / Ideas
 
-- [ ] Add a mechanical emergency-stop button wired directly to the L298N
 - [ ] Gyro + complementary filter fusion for steadier tilt readings
 - [ ] Joystick input option for users who cannot tilt reliably
 - [ ] 3 × AA / LiPo voltage monitoring with low-battery warning
