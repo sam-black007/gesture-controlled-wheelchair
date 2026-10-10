@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="Inter,system-ui,sans-serif">
+  <defs>
+    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L9 3 L0 6 z" fill="#63e6be"/>
+    </marker>
+    <marker id="arrowL" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L9 3 L0 6 z" fill="#7ca7ff"/>
+    </marker>
+    <marker id="arrowD" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L9 3 L0 6 z" fill="#8fa1bc"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="560" fill="#0b1423" rx="16"/>
+
+  <!-- TX badge -->
+  <rect x="40" y="100" width="24" height="24" rx="7" fill="#20334a"/>
+  <text x="52" y="116" font-size="13" font-weight="bold" fill="#63e6be" text-anchor="middle">1</text>
+
+  <!-- Transmitter container -->
+  <rect x="40" y="120" width="260" height="230" rx="14" fill="#0f1727" stroke="#26344b"/>
+  <text x="170" y="152" font-size="15" font-weight="bold" fill="#edf3ff" text-anchor="middle">GESTURE CONTROLLER</text>
+  <text x="170" y="170" font-size="11" fill="#8fa1bc" text-anchor="middle">worn on wrist / hand</text>
+
+  <rect x="60" y="188" width="220" height="60" rx="8" fill="#152743" stroke="#2c4a6b"/>
+  <text x="170" y="215" font-size="13" font-weight="bold" fill="#edf3ff" text-anchor="middle">MPU6050 IMU</text>
+  <text x="170" y="234" font-size="11" fill="#8fa1bc" text-anchor="middle">reads tilt (pitch / roll)</text>
+
+  <rect x="60" y="258" width="220" height="60" rx="8" fill="#152743" stroke="#2c4a6b"/>
+  <text x="170" y="285" font-size="13" font-weight="bold" fill="#edf3ff" text-anchor="middle">ESP32 DevKit</text>
+  <text x="170" y="304" font-size="11" fill="#8fa1bc" text-anchor="middle">maps tilt &#8594; command packet</text>
+
+  <!-- TX -> RX link -->
+  <line x1="300" y1="235" x2="382" y2="235" stroke="#63e6be" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="341" y="220" font-size="11" fill="#8fa1bc" text-anchor="middle">ESP-NOW broadcast</text>
+  <text x="341" y="253" font-size="11" fill="#8fa1bc" text-anchor="middle">16 B &#183; 50 ms</text>
+
+  <!-- RX -> TX settings -->
+  <line x1="382" y1="305" x2="300" y2="305" stroke="#7ca7ff" stroke-width="2" marker-end="url(#arrowL)" stroke-dasharray="5 4"/>
+  <text x="341" y="323" font-size="10" fill="#7ca7ff" text-anchor="middle">sensitivity settings</text>
+
+  <!-- Receiver container -->
+  <rect x="390" y="80" width="340" height="330" rx="14" fill="#0f1727" stroke="#26344b"/>
+  <text x="560" y="112" font-size="15" font-weight="bold" fill="#edf3ff" text-anchor="middle">RECEIVER / CHAIR</text>
+
+  <rect x="410" y="126" width="300" height="60" rx="8" fill="#152743" stroke="#2c4a6b"/>
+  <text x="560" y="153" font-size="13" font-weight="bold" fill="#edf3ff" text-anchor="middle">ESP32 DevKit</text>
+  <text x="560" y="172" font-size="11" fill="#8fa1bc" text-anchor="middle">motor logic &#183; web server &#183; ESP-NOW RX</text>
+
+  <line x1="560" y1="186" x2="560" y2="204" stroke="#3e5a80" stroke-width="2"/>
+  <text x="560" y="200" font-size="10" fill="#3e5a80" text-anchor="middle">&#9660;</text>
+
+  <rect x="410" y="204" width="300" height="60" rx="8" fill="#152743" stroke="#2c4a6b"/>
+  <text x="560" y="231" font-size="13" font-weight="bold" fill="#edf3ff" text-anchor="middle">L298N dual H-bridge</text>
+  <text x="560" y="250" font-size="11" fill="#8fa1bc" text-anchor="middle">PWM speed + direction</text>
+
+  <line x1="560" y1="264" x2="560" y2="282" stroke="#3e5a80" stroke-width="2"/>
+  <text x="560" y="278" font-size="10" fill="#3e5a80" text-anchor="middle">&#9660;</text>
+
+  <rect x="410" y="282" width="300" height="60" rx="8" fill="#152743" stroke="#2c4a6b"/>
+  <text x="560" y="309" font-size="13" font-weight="bold" fill="#edf3ff" text-anchor="middle">2 &#215; DC gearmotors</text>
+  <text x="560" y="328" font-size="11" fill="#8fa1bc" text-anchor="middle">differential (skid) steering</text>
+
+  <rect x="410" y="358" width="300" height="42" rx="8" fill="#5a2635" stroke="#8d394d"/>
+  <text x="560" y="375" font-size="12" font-weight="bold" fill="#ffdce2" text-anchor="middle">Battery &#8594; E-STOP switch &#8594; motor supply</text>
+  <text x="560" y="391" font-size="10" fill="#ffb3c0" text-anchor="middle">hardware fail-safe · cuts all motor power</text>
+
+  <!-- Dashboard -->
+  <line x1="560" y1="410" x2="560" y2="438" stroke="#8fa1bc" stroke-width="2" marker-end="url(#arrowD)" stroke-dasharray="5 4"/>
+  <text x="568" y="428" font-size="10" fill="#8fa1bc">Wi-Fi AP</text>
+
+  <rect x="440" y="440" width="240" height="62" rx="10" fill="#152743" stroke="#2c4a6b"/>
+  <text x="560" y="466" font-size="13" font-weight="bold" fill="#63e6be" text-anchor="middle">WEB DASHBOARD</text>
+  <text x="560" y="486" font-size="11" fill="#8fa1bc" text-anchor="middle">http://192.168.4.1 &#183; any phone / laptop</text>
+
+  <!-- RX badge -->
+  <rect x="390" y="60" width="24" height="24" rx="7" fill="#20334a"/>
+  <text x="402" y="76" font-size="13" font-weight="bold" fill="#63e6be" text-anchor="middle">2</text>
+</svg>

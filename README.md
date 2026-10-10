@@ -2,6 +2,7 @@
 
 [![ESP32](https://img.shields.io/badge/Board-ESP32%20WROOM--32-blue)](https://www.espressif.com/)
 [![Arduino-ESP32](https://img.shields.io/badge/Core%20Version-3.x-orange)](https://github.com/espressif/arduino-esp32)
+[![Release](https://img.shields.io/github/v/release/sam-black007/gesture-controlled-wheelchair)](https://github.com/sam-black007/gesture-controlled-wheelchair/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 A **smart wheelchair prototype** that you drive by tilting your hand, with a live
@@ -36,15 +37,7 @@ Built as a low-cost proof of concept for hands-free mobility assistance.
 
 ## How It Works
 
-```
-┌──────────────────────┐            ESP-NOW            ┌──────────────────────┐
-│  TRANSMITTER (wrist) │  ─────────────────────────►   │   RECEIVER (chair)   │
-│  ESP32 + MPU6050     │  broadcast · ch 1 · ~20 Bpkt │  ESP32 + L298N         │
-│  · reads tilt        │                              │  · drives 2 motors    │
-│  · maps to command   │  ◄─────────────────────────   │  · hosts web console  │
-│  · sends packet @50ms│      sensitivity settings     │  · AP: ESP32_Rover    │
-└──────────────────────┘                              └──────────────────────┘
-```
+![Architecture diagram](docs/media/diagram.svg)
 
 Every ~50 ms the transmitter estimates its tilt from the accelerometer and sends
 a fixed 16-byte packet:
@@ -95,11 +88,16 @@ that auto-refreshes every 500 ms:
 | L298N motor driver   | 1   | dual H-bridge, remove ENA/ENB jumpers  |
 | 2WD chassis + motors | 1   | DC gearmotors, differential steering   |
 | Battery              | 1   | matches the motor/voltage requirements |
+| Emergency-stop button| 1   | NC type, in series with the battery +  |
 | Jumper wires         |     | see wiring tables below                |
+
+Full parts list with costs: **[Bill of Materials](docs/BOM.md)**.
 
 ---
 
 ## Wiring
+
+![Wiring schematic](docs/media/wiring.svg)
 
 ### Receiver board (ESP32 → L298N)
 
@@ -196,14 +194,21 @@ ESP-NOW init status.
 │   │   └── Rover_Receiver_Web_Gesture.ino   # Motor driver, AP + dashboard, ESP-NOW RX
 │   └── Gesture_Transmitter/
 │       └── Gesture_Transmitter.ino          # MPU6050 tilt sensing, ESP-NOW TX
-├── docs/
-│   ├── media/                    # Images & demo video (rendered by the README)
+├── docs/                         # Documentation & design files
+│   ├── media/                    # Images & video (rendered by the README)
+│   │   ├── diagram.svg           # Architecture diagram
+│   │   ├── wiring.svg            # Wiring schematic
 │   │   ├── dashboard.png         # Web dashboard screenshot
 │   │   ├── hardware/
 │   │   │   ├── hardware-1.jpeg   # Hardware build photo
 │   │   │   └── hardware-2.jpeg   # Hardware build photo
 │   │   └── demo.mp4              # Working demo video
+│   ├── hardware/
+│   │   ├── enclosure-remote.scad # Wrist-controller enclosure (OpenSCAD)
+│   │   └── README.md             # Hardware design notes
+│   ├── BOM.md                    # Bill of Materials with costs
 │   └── README.md                 # Docs & media notes
+├── CHANGELOG.md                  # Version history
 ├── .gitignore                    # Arduino / IDE build artifacts
 ├── README.md                     # This file
 └── LICENSE                       # MIT
@@ -258,6 +263,8 @@ Here's the prototype in action (gesture driving + live dashboard):
 <video src="docs/media/demo.mp4" controls="true" width="100%"></video>
 
 > Drop your demo clip at `docs/media/demo.mp4` and GitHub renders it inline on this page.
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and [Releases](https://github.com/sam-black007/gesture-controlled-wheelchair/releases) for tagged builds.
 
 ---
 
