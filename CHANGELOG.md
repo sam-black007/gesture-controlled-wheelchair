@@ -6,6 +6,12 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- CI workflow that compiles both sketches (Arduino-ESP32 core) on every push and PR, with a build status badge
+- Issue templates, pull request template, `CONTRIBUTING.md`, and `CODE_OF_CONDUCT.md`
+- `.editorconfig` and `.gitattributes` for consistent formatting and line endings
+- README table of contents; demo-video thumbnail linking to the player
+
 ### Planned
 - Gyro + complementary-filter fusion for steadier tilt readings
 - Motor encoder feedback with closed-loop (PID) speed control

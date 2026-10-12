@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "firmware/**"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "firmware/**"
+      - ".github/workflows/build.yml"
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: Compile ESP32 sketches
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: esp32:esp32:esp32
+          platforms: |
+            - name: esp32:esp32
+              source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          sketch-paths: |
+            - firmware/Gesture_Transmitter
+            - firmware/Rover_Receiver_Web_Gesture

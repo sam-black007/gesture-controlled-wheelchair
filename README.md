@@ -2,8 +2,10 @@
 
 [![ESP32](https://img.shields.io/badge/Board-ESP32%20WROOM--32-blue)](https://www.espressif.com/)
 [![Arduino-ESP32](https://img.shields.io/badge/Core%20Version-3.x-orange)](https://github.com/espressif/arduino-esp32)
+[![Build](https://github.com/sam-black007/gesture-controlled-wheelchair/actions/workflows/build.yml/badge.svg)](https://github.com/sam-black007/gesture-controlled-wheelchair/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/sam-black007/gesture-controlled-wheelchair)](https://github.com/sam-black007/gesture-controlled-wheelchair/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 A **smart wheelchair prototype** that you drive by tilting your hand, with a live
 web dashboard for manual override and telemetry. Two ESP32 boards talk over
@@ -12,6 +14,24 @@ your wrist/hand, tilt it forward/back/left/right to move, and the receiver board
 drives the left and right motors through an L298N H-bridge.
 
 Built as a low-cost proof of concept for hands-free mobility assistance.
+
+---
+
+## Contents
+
+- [Features](#features)
+- [How It Works](#how-it-works)
+- [Dashboard Preview](#dashboard-preview)
+- [Hardware Required](#hardware-required)
+- [Wiring](#wiring)
+- [Hardware Gallery](#hardware-gallery)
+- [Getting Started](#getting-started)
+- [Operation](#operation)
+- [Project Layout](#project-layout)
+- [Safety & Disclaimer](#safety--disclaimer)
+- [Roadmap / Ideas](#roadmap--ideas)
+- [Working Demo](#working-demo)
+- [License](#license)
 
 ---
 
@@ -189,29 +209,37 @@ ESP-NOW init status.
 
 ```
 .
-├── firmware/                     # All ESP32 sketches (each in its own Arduino folder)
+├── .github/                       # Repo automation
+│   ├── workflows/build.yml        # CI: compiles both sketches on every push/PR
+│   ├── ISSUE_TEMPLATE/            # Bug report & feature request forms
+│   └── PULL_REQUEST_TEMPLATE.md   # PR checklist
+├── firmware/                      # All ESP32 sketches (each in its own Arduino folder)
 │   ├── Rover_Receiver_Web_Gesture/
 │   │   └── Rover_Receiver_Web_Gesture.ino   # Motor driver, AP + dashboard, ESP-NOW RX
 │   └── Gesture_Transmitter/
 │       └── Gesture_Transmitter.ino          # MPU6050 tilt sensing, ESP-NOW TX
-├── docs/                         # Documentation & design files
-│   ├── media/                    # Images & video (rendered by the README)
-│   │   ├── diagram.svg           # Architecture diagram
-│   │   ├── wiring.svg            # Wiring schematic
-│   │   ├── dashboard.png         # Web dashboard screenshot
+├── docs/                          # Documentation & design files
+│   ├── media/                     # Images & video (rendered by the README)
+│   │   ├── diagram.svg            # Architecture diagram
+│   │   ├── wiring.svg             # Wiring schematic
+│   │   ├── dashboard.png          # Web dashboard screenshot
 │   │   ├── hardware/
-│   │   │   ├── hardware-1.jpeg   # Hardware build photo
-│   │   │   └── hardware-2.jpeg   # Hardware build photo
-│   │   └── demo.mp4              # Working demo video
+│   │   │   ├── hardware-1.jpeg    # Hardware build photo
+│   │   │   └── hardware-2.jpeg    # Hardware build photo
+│   │   ├── demo.mp4               # Working demo video
+│   │   └── demo-poster.jpg        # Demo video thumbnail
 │   ├── hardware/
-│   │   ├── enclosure-remote.scad # Wrist-controller enclosure (OpenSCAD)
-│   │   └── README.md             # Hardware design notes
-│   ├── BOM.md                    # Bill of Materials with costs
-│   └── README.md                 # Docs & media notes
-├── CHANGELOG.md                  # Version history
-├── .gitignore                    # Arduino / IDE build artifacts
-├── README.md                     # This file
-└── LICENSE                       # MIT
+│   │   ├── enclosure-remote.scad  # Wrist-controller enclosure (OpenSCAD)
+│   │   └── README.md              # Hardware design notes
+│   ├── BOM.md                     # Bill of Materials with costs
+│   └── README.md                  # Docs & media notes
+├── CHANGELOG.md                   # Version history
+├── CONTRIBUTING.md                # How to report bugs & open PRs
+├── CODE_OF_CONDUCT.md             # Community standards
+├── .editorconfig / .gitattributes # Formatting & line-ending rules
+├── .gitignore                     # Arduino / IDE build artifacts
+├── README.md                      # This file
+└── LICENSE                        # MIT
 ```
 
 ### Key firmware behavior
@@ -260,7 +288,10 @@ this prototype.**
 
 Here's the prototype in action (gesture driving + live dashboard):
 
-<video src="docs/media/demo.mp4" controls="true" width="100%"></video>
+[![Watch the working demo](docs/media/demo-poster.jpg)](https://github.com/sam-black007/gesture-controlled-wheelchair/blob/main/docs/media/demo.mp4)
+
+> Click the thumbnail to open the video player — or
+> [download the clip](https://raw.githubusercontent.com/sam-black007/gesture-controlled-wheelchair/main/docs/media/demo.mp4) directly.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and [Releases](https://github.com/sam-black007/gesture-controlled-wheelchair/releases) for tagged builds.
 
@@ -269,4 +300,3 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and [Releases](https://gith
 ## License
 
 [MIT](LICENSE) © Sam joseph thimothy
-.

@@ -1,0 +1,40 @@
+name: Feature request
+description: Suggest an improvement or new capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are welcome — the [README roadmap](https://github.com/sam-black007/gesture-controlled-wheelchair#roadmap--ideas) lists what's already being considered.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the limitation or need first.
+      placeholder: The controller is hard to use while wearing gloves...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What you'd like to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you've thought about, if any.
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This only changes documentation / repo files (no firmware behaviour)
+        - label: This changes firmware behaviour and I've considered the safety implications

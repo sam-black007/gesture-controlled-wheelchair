@@ -1,0 +1,70 @@
+name: Bug report
+description: Something in the project isn't working as expected
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the project! Please fill in as much detail as possible.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Clear description of the problem.
+      placeholder: The motors stop about a second after I start driving...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: The smallest set of steps that shows the problem.
+      placeholder: |
+        1. Flash both sketches from `main`
+        2. Connect to the ESP32_Rover access point
+        3. Hold a drive button
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      placeholder: The rover should keep driving while the button is held.
+
+  - type: dropdown
+    id: sketch
+    attributes:
+      label: Which sketch is affected?
+      options:
+        - Gesture_Transmitter
+        - Rover_Receiver_Web_Gesture
+        - Both
+        - Not sure
+
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware
+      placeholder: ESP32-WROOM-32 DevKit v1, L298N, GY-521, 2WD chassis...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Serial output / logs
+      description: Paste any serial monitor output (both boards if possible).
+      render: shell
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I flashed the latest code from `main` before reporting this
+          required: true

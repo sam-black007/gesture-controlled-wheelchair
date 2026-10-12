@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Usage question
+    url: https://github.com/sam-black007/gesture-controlled-wheelchair/issues/new?template=bug_report.yml
+    about: Need help flashing or driving the rover? Use the bug report template and describe what you're stuck on.
