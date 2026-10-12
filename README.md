@@ -172,7 +172,7 @@ ESP-NOW init status.
 
 | Control                     | Input                              |
 |-----------------------------|------------------------------------|
-| Forward / Backward          | Tilt controller forward / backward |
+| Forward / Backward          | Tilt wrist back = forward · tilt wrist forward = backward |
 | Left / Right                | Tilt controller left / right       |
 | Web mode                    | Dashboard buttons + speed slider   |
 | Adjust tilt sensitivity     | Dashboard slider (6–25°)           |
@@ -261,8 +261,6 @@ this prototype.**
 Here's the prototype in action (gesture driving + live dashboard):
 
 <video src="docs/media/demo.mp4" controls="true" width="100%"></video>
-
-> Drop your demo clip at `docs/media/demo.mp4` and GitHub renders it inline on this page.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and [Releases](https://github.com/sam-black007/gesture-controlled-wheelchair/releases) for tagged builds.
 
