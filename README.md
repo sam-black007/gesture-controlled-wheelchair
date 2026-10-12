@@ -270,4 +270,5 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and [Releases](https://gith
 
 ## License
 
-[MIT](LICENSE) © Sam Black.
+[MIT](LICENSE) © Sam joseph thimothy
+.
